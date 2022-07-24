@@ -1,7 +1,13 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h>
+#include <NTPClient.h>
 #include "settings.h"
 #include "buttons.h"
+#include "outputctrl.h"
+#include "measure.h"
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "de.pool.ntp.org", 7200, 60000);
 
 bool dcdcButtonInputState = false;
 bool plantButtonInputState = false;
@@ -66,12 +72,27 @@ void setup() {
   Serial.println(" ... OK!");
 
   init_OTA();
+  timeClient.begin();
   init_Buttons();
+  init_Outputctrl();
+  init_Measure();
   Serial.println("Init done");
 }
 
 void loop() {
+  static unsigned long prevMillis = 0;
   ArduinoOTA.handle();
+  timeClient.update();
   handle_Buttons();
+  handle_Outputctrl();
+  
 
+
+  if(elapsed_ms(prevMillis) > 30*1000)
+  {
+    Serial.println("Current Time: " + timeClient.getFormattedTime());
+
+    handle_Measure();
+    prevMillis = millis();
+  }
 }

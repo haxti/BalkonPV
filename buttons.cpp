@@ -23,21 +23,18 @@ void handle_Buttons()
 
   if(!digitalRead(dcdcButtonInputPin))
   {
-    //Serial.println("DCDC pressed...");
     calc_press_dur(&dcdcdur, prevMillis);
   }
 
 
   if(!digitalRead(plantButtonInputPin))
   {
-    //Serial.println("Plant pressed...");
     calc_press_dur(&plantdur, prevMillis);
   }
 
 
   if(!digitalRead(lightButtonInputPin))
   {
-    //Serial.println("Light pressed...");
     calc_press_dur(&lightdur, prevMillis);
   }
 
