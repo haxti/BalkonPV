@@ -1,8 +1,11 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h>
 #include "settings.h"
+#include "buttons.h"
 
-
+bool dcdcButtonInputState = false;
+bool plantButtonInputState = false;
+bool lightButtonInputState = false;
 
 void init_OTA()
 {
@@ -28,7 +31,7 @@ void init_OTA()
   })
   .onProgress([](unsigned int progress, unsigned int total) {
     static int percentage = 0;
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
     if(percentage < (progress / (total / 100)))
     {
       percentage = (progress / (total / 100));
@@ -46,6 +49,7 @@ void init_OTA()
   });
 
   ArduinoOTA.begin();
+  Serial.println("OTA init ok");
 }
 
 void setup() {
@@ -59,13 +63,15 @@ void setup() {
     delay(2000);
     ESP.restart();
   }
-  Serial.println("\n OK!");
+  Serial.println(" ... OK!");
 
   init_OTA();
-
+  init_Buttons();
+  Serial.println("Init done");
 }
 
 void loop() {
   ArduinoOTA.handle();
+  handle_Buttons();
 
 }
