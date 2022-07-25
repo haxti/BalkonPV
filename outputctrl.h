@@ -30,5 +30,7 @@ void handle_light();
 void handle_plant();
 void handle_dcdc();
 
+void switchOutput(int, bool );
+
 
 #endif

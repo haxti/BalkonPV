@@ -6,6 +6,8 @@
 #define I2C_ADDRESS_BATTERY 0x40
 
 
+
+
 void init_Measure();
 
 void init_INA219();

@@ -6,6 +6,9 @@
 INA219_WE ina219_solar(I2C_ADDRESS_SOLAR);
 Adafruit_INA260 ina260_battery = Adafruit_INA260();
 
+extern float batteryVoltage;
+extern float solarVoltage;
+
 void init_Measure()
 {
   Wire.begin();
@@ -24,7 +27,7 @@ void init_INA219()
   ina219_solar.setADCMode(BIT_MODE_12); // choose mode and uncomment for change of default
   ina219_solar.setPGain(PG_320); // choose gain and uncomment for change of default
   ina219_solar.setCorrectionFactor(10); // insert your correction factor if necessary
-  ina219_solar.setShuntVoltOffset_mV(0.3);
+  //ina219_solar.setShuntVoltOffset_mV(0.33);
 }
 
 void init_INA260()
@@ -53,18 +56,21 @@ void measure_INA219()
   float power_mW_sol = 0.0; 
   //bool ina219_overflow = false;
   
-  //shuntVoltage_mV_sol = ina219_solar.getShuntVoltage_mV();
+  shuntVoltage_mV_sol = ina219_solar.getShuntVoltage_mV();
   busVoltage_V_sol = ina219_solar.getBusVoltage_V();
   current_mA_sol = ina219_solar.getCurrent_mA();
   power_mW_sol = ina219_solar.getBusPower();
   //loadVoltage_V_sol  = busVoltage_V_sol + (shuntVoltage_mV_sol/1000);
   //ina219_overflow = ina219.getOverflow();
 
-  //Serial.print("Shunt Voltage_sol [mV]: "); Serial.println(shuntVoltage_mV_sol);
+  Serial.print("Shunt Voltage_sol [mV]: "); Serial.println(shuntVoltage_mV_sol);
   Serial.print("Bus Voltage_sol [V]: "); Serial.println(busVoltage_V_sol);
   //Serial.print("Load Voltage_sol [V]: "); Serial.println(loadVoltage_V_sol);
   Serial.print("Current_sol [mA]: "); Serial.println(current_mA_sol);
   Serial.print("Bus Power_sol [mW]: "); Serial.println(power_mW_sol);
+
+
+  solarVoltage = busVoltage_V_sol;
 }
 
 
@@ -81,4 +87,6 @@ void measure_INA260()
   Serial.print("Power: ");
   Serial.print(ina260_battery.readPower());
   Serial.println(" mW");
+
+  batteryVoltage = ina260_battery.readBusVoltage();
 }

@@ -13,6 +13,9 @@ bool dcdcButtonInputState = false;
 bool plantButtonInputState = false;
 bool lightButtonInputState = false;
 
+float batteryVoltage = 0;
+float solarVoltage = 0;
+
 void init_OTA()
 {
   ArduinoOTA.setPort(ota_port);
